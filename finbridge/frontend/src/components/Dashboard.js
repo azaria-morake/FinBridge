@@ -1,36 +1,49 @@
 // src/components/Dashboard.js
+
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
-const DashboardWrapper = styled.div`
+const DashboardContainer = styled.div`
   display: flex;
   min-height: 100vh;
   background-color: #FFF5E6;
-  color: #4A4A4A;
-  font-family: 'Arial', sans-serif;
 `;
 
 const Sidebar = styled.div`
   width: 250px;
-  background-color: #FF9800;
+  background-color: #FF8C00;
+  color: white;
   padding: 2rem;
   display: flex;
   flex-direction: column;
 `;
 
 const ProfilePicture = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  object-fit: cover;
   margin-bottom: 1rem;
 `;
 
 const UserInfo = styled.div`
-  color: white;
   margin-bottom: 2rem;
+`;
+
+const Button = styled.button`
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  background-color: white;
+  color: #FF8C00;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #E6E6E6;
+  }
 `;
 
 const MainContent = styled.div`
@@ -38,20 +51,12 @@ const MainContent = styled.div`
   padding: 2rem;
 `;
 
-const Button = styled.button`
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border: none;
+const Alert = styled.div`
+  background-color: #FFE4B5;
+  color: #8B4513;
+  padding: 1rem;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  background-color: #4CAF50;
-  color: white;
-  margin-top: auto;
-
-  &:hover {
-    opacity: 0.9;
-  }
+  margin-bottom: 1rem;
 `;
 
 const Modal = styled.div`
@@ -70,55 +75,48 @@ const ModalContent = styled.div`
   background-color: white;
   padding: 2rem;
   border-radius: 5px;
+  width: 80%;
   max-width: 500px;
-  width: 100%;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 `;
 
 const Input = styled.input`
-  padding: 0.5rem;
-  font-size: 1rem;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
   border: 1px solid #ccc;
-  border-radius: 3px;
+  border-radius: 5px;
 `;
 
 const TextArea = styled.textarea`
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  resize: vertical;
-`;
-
-const Alert = styled.div`
-  background-color: #f44336;
-  color: white;
-  padding: 1rem;
-  border-radius: 5px;
+  padding: 0.8rem;
   margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  min-height: 100px;
 `;
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserProfile();
+    fetchUserData();
   }, []);
 
-  const fetchUserProfile = async () => {
+  const fetchUserData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/profiles/me/');
+      const response = await axios.get('http://localhost:8000/api/user/', {
+        withCredentials: true
+      });
       setUser(response.data);
+      setFormData(response.data);
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error('Error fetching user data:', error);
     }
   };
 
@@ -126,59 +124,102 @@ const Dashboard = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSettingsUpdate = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:8000/api/profiles/me/', formData);
-      alert('Settings updated successfully!');
-      setShowSettingsModal(false);
-      fetchUserProfile();
+      await axios.patch('http://localhost:8000/api/user/', formData, {
+        withCredentials: true
+      });
+      setShowModal(false);
+      fetchUserData();
     } catch (error) {
-      alert('Failed to update settings. Please try again.');
+      console.error('Error updating user data:', error);
     }
   };
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:8000/api/users/logout/');
-      navigate('/');
+      await axios.post('http://localhost:8000/api/logout/', {}, {
+        withCredentials: true
+      });
+      window.location.href = '/';
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <DashboardWrapper>
+    <DashboardContainer>
       <Sidebar>
-        <ProfilePicture src={user?.profile_picture || '/default-profile.png'} alt="Profile" />
+        <ProfilePicture src={user.profile_picture || '/default-profile.png'} alt="Profile" />
         <UserInfo>
-          <h2>{`${user?.user.first_name} ${user?.user.last_name}`}</h2>
-          <p>{user?.company_name}</p>
-          <p>{user?.position}</p>
+          <h2>{user.first_name} {user.last_name}</h2>
+          <p>{user.company_name}</p>
+          <p>{user.position}</p>
         </UserInfo>
-        <Button onClick={() => setShowSettingsModal(true)}>Settings</Button>
+        <Button onClick={() => setShowModal(true)}>Settings</Button>
         <Button onClick={handleLogout}>Logout</Button>
       </Sidebar>
       <MainContent>
-        <Alert>This dashboard is under construction.</Alert>
+        <Alert>🚧 Dashboard under construction 🚧</Alert>
       </MainContent>
-
-      {showSettingsModal && (
+      {showModal && (
         <Modal>
           <ModalContent>
-            <h2>Edit Settings</h2>
-            <Form onSubmit={handleSettingsUpdate}>
-              <Input name="company_name" placeholder="Company Name" defaultValue={user?.company_name} onChange={handleInputChange} />
-              <Input name="position" placeholder="Position" defaultValue={user?.position} onChange={handleInputChange} />
-              <Input name="company_location" placeholder="Company Location" defaultValue={user?.company_location} onChange={handleInputChange} />
-              <TextArea name="needs_problems" placeholder="Needs/Problems" defaultValue={user?.needs_problems} onChange={handleInputChange} />
-              <Input type="file" name="profile_picture" onChange={handleInputChange} />
+            <h2>Edit Profile</h2>
+            <Form onSubmit={handleSubmit}>
+              <Input
+                name="first_name"
+                placeholder="First Name"
+                value={formData.first_name}
+                onChange={handleInputChange}
+              />
+              <Input
+                name="last_name"
+                placeholder="Last Name"
+                value={formData.last_name}
+                onChange={handleInputChange}
+              />
+              <Input
+                name="company_name"
+                placeholder="Company Name"
+                value={formData.company_name}
+                onChange={handleInputChange}
+              />
+              <Input
+                name="position"
+                placeholder="Position"
+                value={formData.position}
+                onChange={handleInputChange}
+              />
+              <Input
+                name="company_location"
+                placeholder="Company Location"
+                value={formData.company_location}
+                onChange={handleInputChange}
+              />
+              <TextArea
+                name="needs_problems"
+                placeholder="Needs/Problems"
+                value={formData.needs_problems}
+                onChange={handleInputChange}
+              />
+              <Input
+                type="file"
+                name="profile_picture"
+                onChange={(e) => setFormData({ ...formData, profile_picture: e.target.files[0] })}
+              />
               <Button type="submit">Save</Button>
+              <Button type="button" onClick={() => setShowModal(false)}>Cancel</Button>
             </Form>
           </ModalContent>
         </Modal>
       )}
-    </DashboardWrapper>
+    </DashboardContainer>
   );
 };
 

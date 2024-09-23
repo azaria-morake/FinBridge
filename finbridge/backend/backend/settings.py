@@ -34,6 +34,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+
+# In production, set to True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
