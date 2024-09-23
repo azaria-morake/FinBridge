@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from .models import User
 from .serializers import UserSerializer, UserUpdateSerializer
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -36,3 +38,6 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+def api_root(request):
+    return JsonResponse({"message": "Welcome to the API!"})
