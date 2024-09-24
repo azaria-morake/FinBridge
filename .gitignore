@@ -10,3 +10,7 @@
 *.pyc
 __pycache__/
 *.log
+
+# .gitignore
+.env
+        
