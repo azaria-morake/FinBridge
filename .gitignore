@@ -1,19 +1,12 @@
-# Virtual environment
-venv/
-backend_env/
+# Ignore virtual environments
+/backend_env/
+/finbridgev2/backend_venv/
+
+# Ignore node_modules
+/node_modules/
+/finbridgev2/node_modules/
+
+# Other files to ignore
 *.pyc
-*.pyo
 __pycache__/
-
-# Ignore system files
-*.DS_Store
 *.log
-*.sqlite3
-
-# Ignore IDE/editor config files
-.idea/
-.vscode/
-
-# Node.js dependencies
-node_modules/
-
