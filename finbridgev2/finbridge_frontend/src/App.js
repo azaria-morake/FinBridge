@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import RegisterForm from './components/RegisterForm';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
+import './styles.css';
 
 function App() {
   return (

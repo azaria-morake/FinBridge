@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../styles.css';
 
 function LandingPage() {
   return (
@@ -8,7 +9,7 @@ function LandingPage() {
         <img src="/finbridge-logo-bw.png" alt="FinBridge Logo" className="logo" />
       </header>
       <main>
-        <p>Your SMME's bridge to financial inclusion, a chance for growth.</p>
+        <p>A financial inclusion bridge that leads to growth. Register/Sign In below to get started.</p>
         <Link to="/login" className="btn">Sign In</Link>
         <Link to="/register" className="btn">Register</Link>
       </main>
