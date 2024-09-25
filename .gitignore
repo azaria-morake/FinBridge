@@ -13,4 +13,4 @@ __pycache__/
 
 # .gitignore
 .env
-        
+        .env
