@@ -39,7 +39,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    'http://localhost:3005', # finbridge_frontend .env file: PORT=3005
 ]
 
 ROOT_URLCONF = 'finbridge_backend.urls'
@@ -65,14 +65,15 @@ WSGI_APPLICATION = 'finbridge_backend.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': config('DB_NAME', default='finbridge_db'),
         'USER': config('DB_USER', default='rootz'),
-        'PASSWORD': config('DB_PASSWORD', default=''),
+        'PASSWORD': config('DB_PASSWORD', default='D35mukutl@'),
         'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
+        'PORT': config('DB_PORT', default='3306'),
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
