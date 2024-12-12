@@ -15,8 +15,8 @@ A FinTech platform connecting SMEs to financial institutions, government entitie
 - Comprehensive ecosystem integrating SMEs, investors, and advisors.  
 
 #### **Preview** 🖼️  
-[![FinBridge Preview](https://via.placeholder.com/400x200?text=Project+Preview)](https://your-demo-link.com)  
+[![FinBridge Preview](https://imgur.com/SPbxvXd.png)](www.finbridgeapp.co.za)  
 
 #### **Links** 🔗  
-- [Live Demo](https://www.finbridge.co.za)  
+- [Live Demo](https://www.finbridgeapp.co.za)  
 - [Repository](https://github.com/azaria-morake/FinBridge)  
